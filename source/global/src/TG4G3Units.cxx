@@ -28,9 +28,12 @@ const G4double TG4G3Units::fgkMassDensity  = g/cm3;
 const G4double TG4G3Units::fgkAtomicWeight = g/mole;
 const G4double TG4G3Units::fgkField   = kilogauss;
 
-//_____________________________________________________________________________
-TG4G3Units::~TG4G3Units() 
-{
-/// Destructor
-}
-
+const G4double TG4G3Units::fgkInvLength  = 1./fgkLength;
+const G4double TG4G3Units::fgkInvAngle   = 1./fgkAngle;
+const G4double TG4G3Units::fgkInvTime    = 1./fgkTime;
+const G4double TG4G3Units::fgkInvCharge  = 1./fgkCharge;
+const G4double TG4G3Units::fgkInvEnergy  = 1./fgkEnergy;
+const G4double TG4G3Units::fgkInvMass    = 1./fgkMass;
+const G4double TG4G3Units::fgkInvMassDensity  = 1./fgkMassDensity;
+const G4double TG4G3Units::fgkInvAtomicWeight = 1./fgkAtomicWeight;
+const G4double TG4G3Units::fgkInvField   = 1./fgkField;
