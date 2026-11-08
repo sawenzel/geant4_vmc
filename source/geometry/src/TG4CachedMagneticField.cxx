@@ -25,6 +25,7 @@ TG4CachedMagneticField::TG4CachedMagneticField(
   : TG4MagneticField(magField),
     fLastLocation(),
     fLastValue(),
+    fIsCacheValid(false),
     fCallsCounter(0),
     fEvaluationsCounter(0),
     fConstDistanceSquare(constDistance * constDistance)
@@ -53,7 +54,7 @@ void TG4CachedMagneticField::GetFieldValue(
   ++fCallsCounter;
 
   // Use cached value if within the constant distance
-  if (distSq < fConstDistanceSquare) {
+  if (fIsCacheValid && distSq < fConstDistanceSquare) {
     bfield[0] = fLastValue.x();
     bfield[1] = fLastValue.y();
     bfield[2] = fLastValue.z();
@@ -75,6 +76,7 @@ void TG4CachedMagneticField::GetFieldValue(
   ++fEvaluationsCounter;
   fLastLocation = newLocation;
   fLastValue = G4ThreeVector(bfield[0], bfield[1], bfield[2]);
+  fIsCacheValid = true;
 }
 
 // //_____________________________________________________________________________
@@ -114,4 +116,12 @@ void TG4CachedMagneticField::ClearCounter()
   /// Clear counters
   fCallsCounter = 0;
   fEvaluationsCounter = 0;
+}
+
+//_____________________________________________________________________________
+void TG4CachedMagneticField::ClearCache()
+{
+  /// Forget the last evaluated value, so that the next call evaluates the field
+
+  fIsCacheValid = false;
 }

@@ -94,6 +94,9 @@ class TG4GeometryManager : public TG4Verbose
   // printing
   void PrintFieldStatistics() const;
 
+  // field cache
+  static void ClearFieldCaches();
+
   // get methods
   const std::vector<TG4RadiatorDescription*>& GetRadiators() const;
 

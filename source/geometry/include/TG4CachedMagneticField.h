@@ -54,6 +54,7 @@ class TG4CachedMagneticField : public TG4MagneticField
   virtual void PrintStatistics() const;
 
   void ClearCounter();
+  void ClearCache();
   void SetConstDistance(G4double value);
 
  private:
@@ -62,6 +63,8 @@ class TG4CachedMagneticField : public TG4MagneticField
   mutable G4ThreeVector fLastLocation;
   /// The last evaluated value
   mutable G4ThreeVector fLastValue;
+  /// Whether fLastLocation and fLastValue hold an evaluated field value
+  mutable G4bool fIsCacheValid;
   /// The counter of calls to GetFieldValue()
   mutable G4int fCallsCounter;
   /// The counter of field value evaluations in GetFieldValue()

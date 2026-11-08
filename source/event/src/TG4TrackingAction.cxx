@@ -13,6 +13,7 @@
 /// \author I. Hrivnacova; IPN, Orsay
 
 #include "TG4TrackingAction.h"
+#include "TG4GeometryManager.h"
 #include "TG4GeometryServices.h"
 #include "TG4Globals.h"
 #include "TG4ParticlesManager.h"
@@ -176,6 +177,9 @@ void TG4TrackingAction::PreUserTrackingAction(const G4Track* track)
   if (track->GetParentID() == 0 && isFirstStep) {
     FinishPrimaryTrack();
   }
+
+  // the cached field value of the previous track must not be used
+  TG4GeometryManager::ClearFieldCaches();
 
   // initialize special controls manager
   if (fSpecialControls) fSpecialControls->StartTrack(track);

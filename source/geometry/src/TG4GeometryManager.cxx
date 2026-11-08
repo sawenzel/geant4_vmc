@@ -14,6 +14,7 @@
 
 #include "TG4GeometryManager.h"
 #include "TG4BiasingManager.h"
+#include "TG4CachedMagneticField.h"
 #include "TG4Field.h"
 #include "TG4MagneticField.h"
 #include "TG4FieldParameters.h"
@@ -889,6 +890,21 @@ void TG4GeometryManager::UpdateField()
   // method
   for (G4int i = 0; i < G4int(fgFields->size()); ++i) {
     fgFields->at(i)->Update(*fFieldParameters[i]);
+  }
+}
+
+//_____________________________________________________________________________
+void TG4GeometryManager::ClearFieldCaches()
+{
+  /// Clear the cached values of the cached magnetic fields of this thread,
+  /// so that the field seen by a track does not depend on the previous track
+
+  if (!fgFields) return;
+
+  for (auto field : *fgFields) {
+    auto cachedField =
+      dynamic_cast<TG4CachedMagneticField*>(field->GetG4Field());
+    if (cachedField) cachedField->ClearCache();
   }
 }
 
