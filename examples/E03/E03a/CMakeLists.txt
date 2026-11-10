@@ -143,6 +143,15 @@ endif()
 # Add program to the project targets
 # (this avoids the need of typing the program name after make)
 #
+# Test with G4HepEm physics and a configurable number of events
+if (Geant4_FOUND AND G4HepEm_FOUND)
+  add_executable(${MC_PREFIX}vmc_${test_name}HepEm ${test_name}HepEm.cxx)
+  target_link_libraries(${MC_PREFIX}vmc_${test_name}HepEm ${library_name} ${g4library_name} ${MCPackages_LIBRARIES})
+  if (VMC_INSTALL_EXAMPLES)
+    install(TARGETS ${MC_PREFIX}vmc_${test_name}HepEm DESTINATION bin)
+  endif()
+endif()
+
 add_custom_target(${PROJECT_NAME} DEPENDS
                   ${MC_PREFIX}vmc_${program_name} ${MC_PREFIX}vmc_${test_name})
 
