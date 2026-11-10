@@ -467,6 +467,7 @@ void TG4RunManager::LateInitialize()
     if (fRunConfiguration->IsSpecialCuts()) {
       fRegionsManager->DefineRegions();
       fRegionsManager->UpdateProductionCutsTable();
+      fRegionsManager->SetG4HepEmTrackingCuts();
     }
   }
 
