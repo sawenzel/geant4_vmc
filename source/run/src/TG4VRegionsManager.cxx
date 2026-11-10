@@ -389,11 +389,12 @@ void TG4VRegionsManager::SetG4HepEmTrackingCuts() const
   auto cutEleGlobal = GetGlobalEnergyCut(kCUTELE);
   auto cutGamGlobal = GetGlobalEnergyCut(kCUTGAM);
 
+  auto worldRegion = G4RegionStore::GetInstance()->GetRegion("DefaultRegionForTheWorld", false);
+
   G4int counter = 0;
   for (auto region : *G4RegionStore::GetInstance()) {
     // regions are per material; the world volume stays in the default region
-    auto material = (region == G4RegionStore::GetInstance()->GetRegion(
-                                 "DefaultRegionForTheWorld", false))
+    auto material = (region == worldRegion)
                       ? worldMaterial
                       : G4Material::GetMaterial(region->GetName(), false);
     if (material == nullptr) continue;
