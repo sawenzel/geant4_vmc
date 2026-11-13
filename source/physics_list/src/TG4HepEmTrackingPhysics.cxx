@@ -22,6 +22,7 @@
 #include <G4EmBuilder.hh>
 #include <G4EmModelActivator.hh>
 #include <G4EmParameters.hh>
+#include <G4Version.hh>
 #include <G4Gamma.hh>
 #include <G4GenericIon.hh>
 #include <G4PhysicsListHelper.hh>
@@ -60,6 +61,15 @@ void TG4HepEmTrackingPhysics::ConstructProcess()
   auto trackingManager = new G4HepEmTrackingManager(verboseLevel);
   // the e-/e+ step function of option 1, which G4HepEm does not take from G4EmParameters
   trackingManager->GetConfig()->SetEnergyLossStepLimitFunctionParameters(0.8, 1 * CLHEP::mm);
+  // several msc steps per transportation step only if requested, as in Geant4
+  // (/process/em/transportationWithMsc)
+#if G4VERSION_NUMBER >= 1110
+  trackingManager->GetConfig()->SetMultipleStepsInMSCWithTransportation(
+    G4EmParameters::Instance()->TransportationWithMsc() ==
+    G4TransportationWithMscType::fMultipleSteps);
+#else
+  trackingManager->GetConfig()->SetMultipleStepsInMSCWithTransportation(false);
+#endif
   G4Electron::Definition()->SetTrackingManager(trackingManager);
   G4Positron::Definition()->SetTrackingManager(trackingManager);
   G4Gamma::Definition()->SetTrackingManager(trackingManager);
