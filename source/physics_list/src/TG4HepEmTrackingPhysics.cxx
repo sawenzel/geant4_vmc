@@ -20,6 +20,7 @@
 #include "G4HepEmConfig.hh"
 
 #include "G4EmParameters.hh"
+#include "G4Version.hh"
 
 #include "G4Electron.hh"
 #include "G4Gamma.hh"
@@ -71,6 +72,15 @@ void TG4HepEmTrackingPhysics::ConstructProcess()
   G4HepEmConfig* config = trackingManager->GetConfig();
   config->SetWoodcockTrackingRegion("Woodcock_Region");
 
+  // several msc steps per transportation step only if requested, as in Geant4
+  // (/process/em/transportationWithMsc)
+#if G4VERSION_NUMBER >= 1110
+  trackingManager->GetConfig()->SetMultipleStepsInMSCWithTransportation(
+    G4EmParameters::Instance()->TransportationWithMsc() ==
+    G4TransportationWithMscType::fMultipleSteps);
+#else
+  trackingManager->GetConfig()->SetMultipleStepsInMSCWithTransportation(false);
+#endif
   G4Electron::Definition()->SetTrackingManager(trackingManager);
   G4Positron::Definition()->SetTrackingManager(trackingManager);
   G4Gamma::Definition()->SetTrackingManager(trackingManager);
