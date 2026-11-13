@@ -470,6 +470,8 @@ void TG4RunManager::LateInitialize()
       fRegionsManager->UpdateProductionCutsTable();
       fRegionsManager->SetG4HepEmTrackingCuts();
     }
+    // the SpecialUrbanMsc step limitation in G4HepEm
+    fRegionsManager->SetG4HepEmMscParameters();
   }
 
   // activate/inactivate physics processes
