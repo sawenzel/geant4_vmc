@@ -16,7 +16,10 @@
 #include "TG4G3CutVector.h"
 #include "TG4G3PhysicsManager.h"
 #include "TG4G3Units.h"
+#include "TG4GeometryManager.h"
 #include "TG4GeometryServices.h"
+#include "TG4ModelConfiguration.h"
+#include "TG4ModelConfigurationManager.h"
 #include "TG4Globals.h"
 #include "TG4Limits.h"
 #include "TG4Medium.h"
@@ -415,6 +418,29 @@ void TG4VRegionsManager::SetG4HepEmTrackingCuts() const
     }
   }
   config->SetTrackingCutsAtStepStart(true);
+
+  // regions with the SpecialUrbanMsc model for e-/e+: G4HepEm does not apply the
+  // model, so use its Urban msc with the same step limitation there
+  // (UseSafety, range factor 0.04, safety factor 0.6)
+  auto emModelsManager = TG4GeometryManager::Instance()->GetEmModelsManager();
+  for (auto model : emModelsManager->GetVector()) {
+    if (model->GetModelName() != "SpecialUrbanMsc") continue;
+    if (model->GetParticles().find("e-") == std::string::npos &&
+        model->GetParticles().find("e+") == std::string::npos &&
+        model->GetParticles() != "all") continue;
+    for (const auto& regionName : model->GetRegions()) {
+      if (G4RegionStore::GetInstance()->GetRegion(regionName, false) == nullptr) {
+        TG4Globals::Warning("TG4VRegionsManager", "SetG4HepEmTrackingCuts",
+          TString("SpecialUrbanMsc region not found: ") + regionName.data());
+        continue;
+      }
+      config->SetMinimalMSCStepLimit(false, regionName);
+      config->SetMSCRangeFactor(0.04, regionName);
+      config->SetMSCSafetyFactor(0.6, regionName);
+      G4cout << "G4HepEm msc in region " << regionName
+             << ": UseSafety, range factor 0.04 (as SpecialUrbanMsc)" << G4endl;
+    }
+  }
 
   // rebuild the G4HepEm data with the VMC regions and energy cuts; in sequential
   // mode the tables are built later anyway, in MT the master has already built
