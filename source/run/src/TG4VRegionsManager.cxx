@@ -37,6 +37,7 @@
 #include <G4Version.hh>
 #ifdef USE_G4HEPEM
 #include <G4Electron.hh>
+#include <G4EmParameters.hh>
 #include <G4HepEmConfig.hh>
 #include <G4HepEmTrackingManager.hh>
 #include <G4Material.hh>
@@ -418,6 +419,14 @@ void TG4VRegionsManager::SetG4HepEmTrackingCuts() const
     }
   }
   config->SetTrackingCutsAtStepStart(true);
+
+#if G4VERSION_NUMBER >= 1110
+  // follow /process/em/transportationWithMsc: G4HepEm combines several msc
+  // steps with one transportation step only in the MultipleSteps mode
+  config->SetMultipleStepsInMSCWithTransportation(
+    G4EmParameters::Instance()->TransportationWithMsc() ==
+    G4TransportationWithMscType::fMultipleSteps);
+#endif
 
   // regions with the SpecialUrbanMsc model for e-/e+: G4HepEm does not apply the
   // model, so use its Urban msc with the same step limitation there
