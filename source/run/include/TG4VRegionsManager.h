@@ -67,6 +67,7 @@ class TG4VRegionsManager : public TG4Verbose
   void SetCheck(G4bool isCheck);
   void SetPrint(G4bool isPrint);
   void SetSave(G4bool isSave);
+  void SetG4HepEmMscSafetyFactor(G4double factor);
 
   // get methods
   G4String GetFileName() const;
@@ -77,6 +78,7 @@ class TG4VRegionsManager : public TG4Verbose
   G4bool IsCheck() const;
   G4bool IsPrint() const;
   G4bool IsSave() const;
+  G4double GetG4HepEmMscSafetyFactor() const;
 
  protected:
   // constants
@@ -137,6 +139,8 @@ class TG4VRegionsManager : public TG4Verbose
   G4bool fIsPrint = false;
   /// option to save all regions in a file
   G4bool fIsSave = false;
+  /// G4HepEm msc safety factor in the SpecialUrbanMsc regions
+  G4double fG4HepEmMscSafetyFactor = 0.6;
 };
 
 /// Return the singleton instance
@@ -182,6 +186,12 @@ inline void TG4VRegionsManager::SetPrint(G4bool isPrint)
 inline void TG4VRegionsManager::SetSave(G4bool isSave)
 { fIsSave = isSave; }
 
+/// Set the G4HepEm msc safety factor in the SpecialUrbanMsc regions
+inline void TG4VRegionsManager::SetG4HepEmMscSafetyFactor(G4double factor)
+{
+  fG4HepEmMscSafetyFactor = factor;
+}
+
 /// Return the file name for regions output
 inline G4String TG4VRegionsManager::GetFileName() const
 { return fFileName; }
@@ -208,6 +218,12 @@ inline G4bool TG4VRegionsManager::GetApplyForPositron() const
 inline G4bool TG4VRegionsManager::GetApplyForProton() const
 {
   return fApplyForProton;
+}
+
+/// Return the G4HepEm msc safety factor in the SpecialUrbanMsc regions
+inline G4double TG4VRegionsManager::GetG4HepEmMscSafetyFactor() const
+{
+  return fG4HepEmMscSafetyFactor;
 }
 
 /// Return the option to perform consistency check

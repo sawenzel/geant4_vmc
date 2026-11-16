@@ -81,6 +81,8 @@ class TG4RegionsMessenger : public G4UImessenger
   G4UIcmdWithABool* fSetSaveCmd = nullptr;
   /// command: /mcRegions/setFileName fileName
   G4UIcmdWithAString* fSetFileNameCmd = nullptr;
+  /// command: /mcRegions/setG4HepEmMscSafetyFactor value
+  G4UIcmdWithADouble* fSetG4HepEmMscSafetyFactorCmd = nullptr;
 
   // commands working only with old regions messenger
   /// command: /mcRegions/dump [lvName]

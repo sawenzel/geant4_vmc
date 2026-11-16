@@ -434,7 +434,8 @@ void TG4VRegionsManager::SetG4HepEmTrackingCuts() const
 void TG4VRegionsManager::SetG4HepEmMscParameters() const
 {
   /// Apply the step limitation of SpecialUrbanMsc in its regions with the
-  /// G4HepEm Urban msc (UseSafety, range factor 0.04, safety factor 0.6), if
+  /// G4HepEm Urban msc (UseSafety, range factor 0.04, safety factor 0.6 by
+  /// default, see /mcRegions/setG4HepEmMscSafetyFactor), if
   /// G4HepEm is used for e-, e+. G4HepEm does not take user msc models.
 
 #ifdef USE_G4HEPEM
@@ -459,10 +460,11 @@ void TG4VRegionsManager::SetG4HepEmMscParameters() const
       }
       config->SetMinimalMSCStepLimit(false, regionName);
       config->SetMSCRangeFactor(0.04, regionName);
-      config->SetMSCSafetyFactor(0.6, regionName);
+      config->SetMSCSafetyFactor(fG4HepEmMscSafetyFactor, regionName);
       if (VerboseLevel() > 0) {
         G4cout << "G4HepEm msc in region " << regionName
-               << ": UseSafety, range factor 0.04 (as SpecialUrbanMsc)" << G4endl;
+               << ": UseSafety, range factor 0.04, safety factor "
+               << fG4HepEmMscSafetyFactor << G4endl;
       }
     }
   }

@@ -60,6 +60,7 @@ TG4RegionsMessenger::~TG4RegionsMessenger()
   delete fApplyForProtonCmd;
   delete fSetLoadCmd;
   delete fSetFromG4TableCmd;
+  delete fSetG4HepEmMscSafetyFactorCmd;
 }
 
 //
@@ -126,6 +127,14 @@ void TG4RegionsMessenger::CreateCommands()
   fApplyForProtonCmd->SetParameterName("ApplyForProton", false);
   fApplyForProtonCmd->AvailableForStates(G4State_PreInit, G4State_Init);
 
+  fSetG4HepEmMscSafetyFactorCmd =
+    new G4UIcmdWithADouble("/mcRegions/setG4HepEmMscSafetyFactor", this);
+  fSetG4HepEmMscSafetyFactorCmd->SetGuidance(
+    "Set the G4HepEm msc safety factor in the regions with SpecialUrbanMsc");
+  fSetG4HepEmMscSafetyFactorCmd->SetParameterName("SafetyFactor", false);
+  fSetG4HepEmMscSafetyFactorCmd->SetRange("SafetyFactor > 0");
+  fSetG4HepEmMscSafetyFactorCmd->AvailableForStates(G4State_PreInit, G4State_Init);
+
   if (fRegionsManager != nullptr) {
     // commands working only with old regions manager
     fDumpRegionCmd = new G4UIcmdWithAString("/mcRegions/dumpRegion", this);
@@ -163,6 +172,14 @@ void TG4RegionsMessenger::CreateCommands()
 void TG4RegionsMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   /// Apply command to the associated object.
+
+  if (command == fSetG4HepEmMscSafetyFactorCmd) {
+    TG4VRegionsManager* regionsManager = fRegionsManager2;
+    if (regionsManager == nullptr) regionsManager = fRegionsManager;
+    regionsManager->SetG4HepEmMscSafetyFactor(
+      fSetG4HepEmMscSafetyFactorCmd->GetNewDoubleValue(newValue));
+    return;
+  }
 
   if (fRegionsManager2 != nullptr) {
     if (command == fApplyForGammaCmd) {
